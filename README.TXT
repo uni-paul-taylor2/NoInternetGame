@@ -4,9 +4,9 @@ Tell the reader (someone who does not know anything about this project)
 all they need to know. The comments should usually include at least:
 ------------------------------------------------------------------------
 
-PROJECT TITLE:
-PURPOSE OF PROJECT:
-VERSION or DATE:
+PROJECT TITLE: No Internet Game
+PURPOSE OF PROJECT: To implement the JavaGameEngine written earlier
+VERSION or DATE: 10th/2/2025
 HOW TO START THIS PROJECT:
-AUTHORS:
+AUTHORS: Paul Taylor
 USER INSTRUCTIONS:
