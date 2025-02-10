@@ -9,4 +9,4 @@ PURPOSE OF PROJECT: To implement the JavaGameEngine written earlier
 VERSION or DATE: 10th/2/2025
 HOW TO START THIS PROJECT:
 AUTHORS: Paul Taylor
-USER INSTRUCTIONS:
+USER INSTRUCTIONS: `git clone https://github.com/uni-paul-taylor2/NoInternetGame.git --recurse-submodules`
