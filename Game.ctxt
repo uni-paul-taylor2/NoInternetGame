@@ -1,0 +1,6 @@
+#BlueJ class context
+comment0.target=Game
+comment0.text=\r\n\ The\ game's\ entry\ point.\r\n\r\n\ @author\ (Paul\ Taylor)\r\n\ @version\ (7th/2/2025)\r\n
+comment1.params=args
+comment1.target=void\ main(java.lang.String[])
+numComments=2
