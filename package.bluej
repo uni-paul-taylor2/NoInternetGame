@@ -1,17 +1,17 @@
 #BlueJ package file
-dependency1.from=Dinosaur
+dependency1.from=Game
 dependency1.to=Ground
 dependency1.type=UsesDependency
 dependency2.from=Game
-dependency2.to=Ground
+dependency2.to=Dinosaur
 dependency2.type=UsesDependency
-dependency3.from=Game
-dependency3.to=Dinosaur
+dependency3.from=Dinosaur
+dependency3.to=Ground
 dependency3.type=UsesDependency
-editor.fx.0.height=784
-editor.fx.0.width=1382
-editor.fx.0.x=-8
-editor.fx.0.y=-8
+editor.fx.0.height=739
+editor.fx.0.width=816
+editor.fx.0.x=275
+editor.fx.0.y=10
 objectbench.height=130
 objectbench.width=1342
 package.divider.horizontal=0.6

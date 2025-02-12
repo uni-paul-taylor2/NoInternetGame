@@ -27,19 +27,19 @@ public class Dinosaur
     private double origJumpSpeed(){return -0.4*GRAVITY;}
     private double GRAVITY;
     private double rodX=50, rodY=200;
-    private double legX=+0, legY=+0, headX=+10, headY=-20, mouthX=+25, mouthY=-15;
+    private double legX=+0, legY=+0, headX=+10, headY=-20, mouthX=+25, mouthY=-15, uTorsoX=+5, uTorsoY=-20, lTorsoX=-10, lTorsoY=-10, tailX=-30, tailY=0;
     
     public void addToPanel(GamePanel p){
         p.addItem(rod,true,true);
         p.addItem(leftLeg,true,true);
         p.addItem(rightLeg,true,true);
-        p.addItem(head,true,true);
-        p.addItem(mouth,true,true);
-        /*
-        p.addItem(tail,true,true);
         p.addItem(upperBody,true,true);
+        p.addItem(mouth,true,true);
+        p.addItem(head,true,true);
+        
+        p.addItem(tail,true,true);
         p.addItem(lowerBody,true,true);
-        */
+        
     }
     public boolean jump(){
         if(jumping) return false;
@@ -87,19 +87,6 @@ public class Dinosaur
         leftLeg = new GameObject(leftLegShape,new Color(174,93,4),true){
             @Override
             public void onGameTick(int tick, ArrayList<GameObject> collisions){
-                /*Path2D.Double path = (Path2D.Double)shape;
-                double X=rod.getX(), Y=rod.getY();
-                path.reset();
-                path.append(new Rectangle2D.Double(X,Y,5,20),false);
-                AffineTransform transformer = new AffineTransform();
-                double angle = Math.sin(tick*0.8) * Math.PI/4; //theta
-                double pivotX=X+2.5, pivotY=Y;
-                transformer.setToRotation(angle,pivotX,pivotY);
-                path.transform(transformer);*/
-                //onGameTickDefault(tick,collisions);
-                //pivotX = rod.getX()+2.5;
-                //pivotY = rod.getY();
-                //rotate(Math.sin(tick*0.8) * Math.PI/4,  rod.getX()+2.5,  rod.getY());
                 onGameTickDefault(tick,collisions);
                 rotate(Math.sin(tick*0.8) * Math.PI/4,  rod.getX()+2.5,  rod.getY());
             }
@@ -109,40 +96,23 @@ public class Dinosaur
         rightLeg = new GameObject(rightLegShape,new Color(174,93,4),true){
             @Override
             public void onGameTick(int tick, ArrayList<GameObject> collisions){
-                /*Path2D.Double path = (Path2D.Double)shape;
-                double X=rod.getX(), Y=rod.getY();
-                path.reset();
-                path.append(new Rectangle2D.Double(X,Y,5,20),false);
-                AffineTransform transformer = new AffineTransform();
-                double angle = Math.sin(Math.PI+(tick*0.8)) * Math.PI/4; //PI + theta
-                double pivotX=X+2.5, pivotY=Y;
-                transformer.setToRotation(angle,pivotX,pivotY);
-                path.transform(transformer);*/
-                //onGameTickDefault(tick,collisions);
-                //pivotX = rod.getX()+2.5;
-                //pivotY = rod.getY();
-                //rotate(Math.sin(Math.PI+(tick*0.8)) * Math.PI/4,  rod.getX()+2.5,  rod.getY());
                 onGameTickDefault(tick,collisions);
                 rotate(Math.sin(Math.PI+(tick*0.8)) * Math.PI/4,  rod.getX()+2.5,  rod.getY());
             }
         };
-        //tail;
-        head = new GameObject(new RoundRectangle2D.Double(rodX+headX,rodY+headY,20,20,4,4),new Color(2,48,32),true){
-            @Override
-            public void onGameTick(int tick, ArrayList<GameObject> collisions){
-                onGameTickDefault(tick,collisions);
-            }
-        };
-        mouth = new GameObject(new RoundRectangle2D.Double(rodX+mouthX,rodY+mouthY,12,12,3,3),Color.GRAY,true){
-            @Override
-            public void onGameTick(int tick, ArrayList<GameObject> collisions){
-                onGameTickDefault(tick,collisions);
-            }
-        };
+        RoundRectangle2D.Double tRect = new RoundRectangle2D.Double(rodX+tailX,rodY+tailY,30,7,5,5);
+        tail = new GameObject(GameObject.Rotate(tRect,0.17*Math.PI,rodX+tailX+25,tRect.getCenterY()),  new Color(97,0,0),  true);
+        head = new GameObject(new RoundRectangle2D.Double(rodX+headX,rodY+headY,20,20,4,4),  new Color(2,48,32),  true);
+        mouth = new GameObject(new RoundRectangle2D.Double(rodX+mouthX,rodY+mouthY,12,12,3,3),  new Color(97,0,0),  true);
+        RoundRectangle2D.Double uRect = new RoundRectangle2D.Double(rodX+uTorsoX,rodY+uTorsoY,15,30,4,4);
+        upperBody = new GameObject(GameObject.Rotate(uRect,0.3*Math.PI,uRect.getCenterX(),uRect.getCenterY()),  new Color(2,48,32),  true);
+        lowerBody = new GameObject(new RoundRectangle2D.Double(rodX+lTorsoX,rodY+lTorsoY,20,20,5,5),  new Color(2,48,32),  true);
         mouth.attatchTo(rod);
         head.attatchTo(rod);
         leftLeg.attatchTo(rod);
         rightLeg.attatchTo(rod);
-        //97,0,0 //torso
+        upperBody.attatchTo(rod);
+        lowerBody.attatchTo(rod);
+        tail.attatchTo(rod);
     }
 }
