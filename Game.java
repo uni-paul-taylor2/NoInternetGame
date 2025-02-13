@@ -11,11 +11,11 @@ public class Game
 {
     public static void main(String[] args)
     {
-        Ground ground = new Ground();
         JFrame frame = new JFrame();
         frame.setSize(Constants.DEFAULT_PANEL_WIDTH, Constants.DEFAULT_PANEL_HEIGHT);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         GamePanel panel = new GamePanel();
+        Ground ground = new Ground(panel);
         Dinosaur dino = new Dinosaur(ground);
         dino.addToPanel(panel); //this works
         panel.addItem(ground,true,true); //but ground does not?

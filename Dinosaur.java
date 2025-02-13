@@ -10,7 +10,7 @@ import JavaGameEngine.*;
  * @author (Paul Taylor)
  * @version (7th/2/2025)
  */
-public class Dinosaur
+public class Dinosaur implements CompositeGameObject
 {
     private GameObject leftLeg;
     private GameObject rightLeg;
@@ -36,10 +36,18 @@ public class Dinosaur
         p.addItem(upperBody,true,true);
         p.addItem(mouth,true,true);
         p.addItem(head,true,true);
-        
         p.addItem(tail,true,true);
         p.addItem(lowerBody,true,true);
-        
+    }
+    public void removeFromPanel(GamePanel p){
+        p.removeItem(rod);
+        p.removeItem(leftLeg);
+        p.removeItem(rightLeg);
+        p.removeItem(upperBody);
+        p.removeItem(mouth);
+        p.removeItem(head);
+        p.removeItem(tail);
+        p.removeItem(lowerBody);
     }
     public boolean jump(){
         if(jumping) return false;
