@@ -12,8 +12,8 @@ import JavaGameEngine.*;
  */
 public class Cactus implements CompositeGameObject
 {
-    private static double slideSpeed=120;
-    private static double origSlideSpeed=120;
+    private static double slideSpeed=240;
+    private static double origSlideSpeed=240;
     public static void setSlideSpeed(double speed){slideSpeed=speed;}
     public static double getSlideSpeed(){return slideSpeed;}
     private GameObject left;
@@ -47,7 +47,7 @@ public class Cactus implements CompositeGameObject
         vX *= size;
         vY *= size;
         
-        leftX += origSlideSpeed-slideSpeed;
+        leftX += slideSpeed-origSlideSpeed;
         leftY -= size*8;
         left = new GameObject(new RoundRectangle2D.Double(leftX,leftY,size*2,size*4,5,5), Color.GREEN, true){
             @Override
