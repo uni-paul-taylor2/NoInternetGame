@@ -22,6 +22,7 @@ public class Dinosaur implements CompositeGameObject
     private GameObject rod; //invisible shape used for aligning to ground
     private GameObject ground;
     private boolean jumping;
+    private boolean gameEnds=false;
     private int gameTick;
     private double jumpSpeed;
     private double origJumpSpeed(){return -0.4*GRAVITY;}
@@ -29,6 +30,7 @@ public class Dinosaur implements CompositeGameObject
     private double rodX=50, rodY=200;
     private double legX=+0, legY=+0, headX=+10, headY=-20, mouthX=+25, mouthY=-15, uTorsoX=+5, uTorsoY=-20, lTorsoX=-10, lTorsoY=-10, tailX=-30, tailY=0;
     
+    @Override
     public void addToPanel(GamePanel p){
         p.addItem(rod,true,true);
         p.addItem(leftLeg,true,true);
@@ -39,6 +41,7 @@ public class Dinosaur implements CompositeGameObject
         p.addItem(tail,true,true);
         p.addItem(lowerBody,true,true);
     }
+    @Override
     public void removeFromPanel(GamePanel p){
         p.removeItem(rod);
         p.removeItem(leftLeg);
@@ -95,6 +98,7 @@ public class Dinosaur implements CompositeGameObject
         leftLeg = new GameObject(leftLegShape,new Color(174,93,4),true){
             @Override
             public void onGameTick(int tick, ArrayList<GameObject> collisions){
+                endGameIfCollision(collisions);
                 onGameTickDefault(tick,collisions);
                 rotate(Math.sin(tick*0.8) * Math.PI/4,  rod.getX()+2.5,  rod.getY());
             }
@@ -104,17 +108,55 @@ public class Dinosaur implements CompositeGameObject
         rightLeg = new GameObject(rightLegShape,new Color(174,93,4),true){
             @Override
             public void onGameTick(int tick, ArrayList<GameObject> collisions){
+                endGameIfCollision(collisions);
                 onGameTickDefault(tick,collisions);
                 rotate(Math.sin(Math.PI+(tick*0.8)) * Math.PI/4,  rod.getX()+2.5,  rod.getY());
             }
         };
+        
         RoundRectangle2D.Double tRect = new RoundRectangle2D.Double(rodX+tailX,rodY+tailY,30,7,5,5);
-        tail = new GameObject(GameObject.Rotate(tRect,0.17*Math.PI,rodX+tailX+25,tRect.getCenterY()),  new Color(97,0,0),  true);
-        head = new GameObject(new RoundRectangle2D.Double(rodX+headX,rodY+headY,20,20,4,4),  new Color(2,48,32),  true);
-        mouth = new GameObject(new RoundRectangle2D.Double(rodX+mouthX,rodY+mouthY,12,12,3,3),  new Color(97,0,0),  true);
         RoundRectangle2D.Double uRect = new RoundRectangle2D.Double(rodX+uTorsoX,rodY+uTorsoY,15,30,4,4);
-        upperBody = new GameObject(GameObject.Rotate(uRect,0.3*Math.PI,uRect.getCenterX(),uRect.getCenterY()),  new Color(2,48,32),  true);
-        lowerBody = new GameObject(new RoundRectangle2D.Double(rodX+lTorsoX,rodY+lTorsoY,20,20,5,5),  new Color(2,48,32),  true);
+        Path2D tailShape = GameObject.Rotate(tRect,0.17*Math.PI,rodX+tailX+25,tRect.getCenterY());
+        RoundRectangle2D.Double headShape = new RoundRectangle2D.Double(rodX+headX,rodY+headY,20,20,4,4);
+        RoundRectangle2D.Double mouthShape = new RoundRectangle2D.Double(rodX+mouthX,rodY+mouthY,12,12,3,3);
+        Path2D upperBodyShape = GameObject.Rotate(uRect,0.3*Math.PI,uRect.getCenterX(),uRect.getCenterY());
+        RoundRectangle2D.Double lowerBodyShape = new RoundRectangle2D.Double(rodX+lTorsoX,rodY+lTorsoY,20,20,5,5);
+        
+        tail = new GameObject(tailShape,  new Color(97,0,0),  true){
+            @Override
+            public void onGameTick(int tick, ArrayList<GameObject> collisions){
+                endGameIfCollision(collisions);
+                onGameTickDefault(tick,collisions);
+            }
+        };
+        head = new GameObject(headShape,  new Color(2,48,32),  true){
+            @Override
+            public void onGameTick(int tick, ArrayList<GameObject> collisions){
+                endGameIfCollision(collisions);
+                onGameTickDefault(tick,collisions);
+            }
+        };
+        mouth = new GameObject(mouthShape,  new Color(97,0,0),  true){
+            @Override
+            public void onGameTick(int tick, ArrayList<GameObject> collisions){
+                endGameIfCollision(collisions);
+                onGameTickDefault(tick,collisions);
+            }
+        };
+        upperBody = new GameObject(upperBodyShape,  new Color(2,48,32),  true){
+            @Override
+            public void onGameTick(int tick, ArrayList<GameObject> collisions){
+                endGameIfCollision(collisions);
+                onGameTickDefault(tick,collisions);
+            }
+        };
+        lowerBody = new GameObject(lowerBodyShape,  new Color(2,48,32),  true){
+            @Override
+            public void onGameTick(int tick, ArrayList<GameObject> collisions){
+                endGameIfCollision(collisions);
+                onGameTickDefault(tick,collisions);
+            }
+        };
         mouth.attatchTo(rod);
         head.attatchTo(rod);
         leftLeg.attatchTo(rod);
@@ -122,5 +164,19 @@ public class Dinosaur implements CompositeGameObject
         upperBody.attatchTo(rod);
         lowerBody.attatchTo(rod);
         tail.attatchTo(rod);
+    }
+    
+    private void endGameIfCollision(ArrayList<GameObject> collisions){
+        if(gameEnds) return;
+        for(GameObject item: collisions){
+            if(
+                item==rod || item==leftLeg || item==rightLeg || item==upperBody || item==mouth
+                || item==head || item==tail || item==lowerBody || item==ground
+            ) continue;
+            gameEnds = true;
+            break;
+        }
+        if(!gameEnds) return;
+        Game.stop();
     }
 }

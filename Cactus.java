@@ -16,6 +16,7 @@ public class Cactus implements CompositeGameObject
     private static double origSlideSpeed=240;
     public static void setSlideSpeed(double speed){slideSpeed=speed;}
     public static double getSlideSpeed(){return slideSpeed;}
+    public static void resetSlideSpeed(){slideSpeed=origSlideSpeed;}
     private GameObject left;
     private GameObject right;
     private GameObject horizontal;
@@ -24,6 +25,7 @@ public class Cactus implements CompositeGameObject
     private double rightX=+6, rightY=+0, hX=+0, hY=+3, vX=+3, vY=-3;
     GamePanel panel;
     //above are all the shapes of the cacti
+    @Override
     public void addToPanel(GamePanel p){
         panel = p;
         p.addItem(left,true,true);
@@ -31,6 +33,7 @@ public class Cactus implements CompositeGameObject
         p.addItem(horizontal,true,true);
         p.addItem(vertical,true,true);
     }
+    @Override
     public void removeFromPanel(GamePanel p){
         panel = p;
         p.removeItem(left);
