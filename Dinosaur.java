@@ -25,7 +25,7 @@ public class Dinosaur implements CompositeGameObject
     private boolean gameEnds=false;
     private int gameTick;
     private double jumpSpeed;
-    private double origJumpSpeed(){return -0.4*GRAVITY;}
+    private double origJumpSpeed(){return -0.35*GRAVITY;}
     private double GRAVITY;
     private double rodX=50, rodY=200;
     private double legX=+0, legY=+0, headX=+10, headY=-20, mouthX=+25, mouthY=-15, uTorsoX=+5, uTorsoY=-20, lTorsoX=-10, lTorsoY=-10, tailX=-30, tailY=0;
@@ -56,12 +56,14 @@ public class Dinosaur implements CompositeGameObject
         if(jumping) return false;
         jumpSpeed = origJumpSpeed();
         jumping = true;
+        //rod.setAcceleration(0,GRAVITY);
         return true;
     }
     public boolean land(){
         if(!jumping) return false;
         jumpSpeed = 0;
         jumping = false;
+        //rod.setAcceleration(0,0,true);
         return true;
     }
     
@@ -73,14 +75,16 @@ public class Dinosaur implements CompositeGameObject
         rod = new GameObject(new Rectangle2D.Double(rodX,rodY,5,20),new Color(0,0,0,0),true){
             @Override
             public void onGameTick(int tick, ArrayList<GameObject> collisions){
-                boolean justStartedJumping = origJumpSpeed()==jumpSpeed;
-                if(jumping) jumpSpeed+=GRAVITY/Constants.TICK_RATE;
-                speedY = jumpSpeed;
+                //boolean justStartedJumping = origJumpSpeed()==jumpSpeed;
+                //if(jumping) jumpSpeed+=GRAVITY/Constants.TICK_RATE;
+                //speedY = jumpSpeed;
+                boolean justStartedJumping = origJumpSpeed()==speedY;
                 if(!justStartedJumping){
                     for(GameObject gameObject: collisions){
                         if(gameObject == ground){
                             land();
-                            speedY = jumpSpeed;
+                            setAcceleration(0,0,true);
+                            //speedY = jumpSpeed;
                             break;
                         }
                     }
@@ -89,8 +93,11 @@ public class Dinosaur implements CompositeGameObject
             }
             @Override
             public void onKeyPress(KeyEvent k){
-                jump();
-                speedY = jumpSpeed;
+                if(!jumping){
+                    jump();
+                    setAcceleration(0,GRAVITY);
+                    speedY = jumpSpeed;
+                }
             }
         };
         Path2D.Double leftLegShape = new Path2D.Double();
