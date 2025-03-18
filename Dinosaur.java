@@ -1,7 +1,9 @@
 import java.awt.*;
+import java.io.File;
 import java.awt.geom.*;
 import java.util.ArrayList;
 import java.awt.event.*;
+import javax.sound.sampled.*;
 import JavaGameEngine.*;
 
 /**
@@ -12,6 +14,13 @@ import JavaGameEngine.*;
  */
 public class Dinosaur implements CompositeGameObject
 {
+    //added sound management here because why not ;-;
+    public static Clip jumpSound=SoundManager.getAudio("sounds/Jump.wav");
+    public static Clip failSound=SoundManager.getAudio("sounds/Crash.wav");
+    public static Clip perFiveSecSound=SoundManager.getAudio("sounds/Achievement.wav");
+    public static Clip perHalfSecSound=SoundManager.getAudio("sounds/Steps.wav");
+    public static Clip backgroundMusic=SoundManager.getAudio("sounds/MusicLoop.wav");
+    
     private GameObject leftLeg;
     private GameObject rightLeg;
     private GameObject tail;
@@ -24,6 +33,7 @@ public class Dinosaur implements CompositeGameObject
     private boolean jumping;
     private boolean gameEnds=false;
     private int gameTick;
+    private int tickMarker=0;
     private double jumpSpeed;
     private double origJumpSpeed(){return -0.35*GRAVITY;}
     private double GRAVITY;
@@ -54,16 +64,17 @@ public class Dinosaur implements CompositeGameObject
     }
     public boolean jump(){
         if(jumping) return false;
+        SoundManager.playAudio(jumpSound);
         jumpSpeed = origJumpSpeed();
         jumping = true;
-        //rod.setAcceleration(0,GRAVITY);
+        rod.setAcceleration(0,GRAVITY);
         return true;
     }
     public boolean land(){
         if(!jumping) return false;
         jumpSpeed = 0;
         jumping = false;
-        //rod.setAcceleration(0,0,true);
+        rod.setAcceleration(0,0,true);
         return true;
     }
     
@@ -75,16 +86,20 @@ public class Dinosaur implements CompositeGameObject
         rod = new GameObject(new Rectangle2D.Double(rodX,rodY,5,20),new Color(0,0,0,0),true){
             @Override
             public void onGameTick(int tick, ArrayList<GameObject> collisions){
-                //boolean justStartedJumping = origJumpSpeed()==jumpSpeed;
-                //if(jumping) jumpSpeed+=GRAVITY/Constants.TICK_RATE;
-                //speedY = jumpSpeed;
+                if(tick==2) SoundManager.playAudio(backgroundMusic,true);
+                if(tick>0){
+                    int rate=Constants.TICK_RATE;
+                    if(tick%(rate*5)==0) SoundManager.playAudio(perFiveSecSound);
+                    if(tick-tickMarker >= rate*0.5){
+                        tickMarker = tick;
+                        SoundManager.playAudio(perHalfSecSound);
+                    }
+                }
                 boolean justStartedJumping = origJumpSpeed()==speedY;
                 if(!justStartedJumping){
                     for(GameObject gameObject: collisions){
                         if(gameObject == ground){
                             land();
-                            setAcceleration(0,0,true);
-                            //speedY = jumpSpeed;
                             break;
                         }
                     }
@@ -95,7 +110,6 @@ public class Dinosaur implements CompositeGameObject
             public void onKeyPress(KeyEvent k){
                 if(!jumping){
                     jump();
-                    setAcceleration(0,GRAVITY);
                     speedY = jumpSpeed;
                 }
             }
@@ -107,7 +121,8 @@ public class Dinosaur implements CompositeGameObject
             public void onGameTick(int tick, ArrayList<GameObject> collisions){
                 endGameIfCollision(collisions);
                 onGameTickDefault(tick,collisions);
-                rotate(Math.sin(tick*0.8) * Math.PI/4,  rod.getX()+2.5,  rod.getY());
+                double runningSpeed = tick*(16.0/Constants.TICK_RATE);
+                rotate(Math.sin(runningSpeed) * Math.PI/4,  rod.getX()+2.5,  rod.getY());
             }
         };
         Path2D.Double rightLegShape = new Path2D.Double();
@@ -117,7 +132,8 @@ public class Dinosaur implements CompositeGameObject
             public void onGameTick(int tick, ArrayList<GameObject> collisions){
                 endGameIfCollision(collisions);
                 onGameTickDefault(tick,collisions);
-                rotate(Math.sin(Math.PI+(tick*0.8)) * Math.PI/4,  rod.getX()+2.5,  rod.getY());
+                double runningSpeed = tick*(16.0/Constants.TICK_RATE);
+                rotate(Math.sin(Math.PI+runningSpeed) * Math.PI/4,  rod.getX()+2.5,  rod.getY());
             }
         };
         
@@ -184,6 +200,8 @@ public class Dinosaur implements CompositeGameObject
             break;
         }
         if(!gameEnds) return;
+        backgroundMusic.stop();
+        SoundManager.playAudio(failSound);
         Game.stop();
     }
 }

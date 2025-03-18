@@ -18,13 +18,15 @@ public class Ground extends GameObject
         super(new Rectangle2D.Double(0,219,599,179),new Color(92,67,39),true);
         panel = instance;
         Cactus.resetSlideSpeed();
-        spawnRandomCactus(0);
     }
     @Override
     public void onGameTick(int tick, ArrayList<GameObject> collisions){
         //logic to randomly spawn cacti of different sizes here
-        if(tick>0 && tick%50==0) Cactus.setSlideSpeed(Cactus.getSlideSpeed()+10);
-        if(tick-lastSpawned>(Math.random()*30+12)) spawnRandomCactus(tick,0.8);
+        double increment = Constants.TICK_RATE*2.5;
+        double range = Constants.TICK_RATE*1.5;
+        double gap = Constants.TICK_RATE*0.6;
+        if(tick>0 && tick%increment==0) Cactus.setSlideSpeed(Cactus.getSlideSpeed()+10);
+        if(tick-lastSpawned>(Math.random()*range+gap)) spawnRandomCactus(tick,0.8);
         onGameTickDefault(tick,collisions);
     }
     public void spawnRandomCactus(int tick){

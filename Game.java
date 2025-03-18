@@ -15,11 +15,14 @@ public class Game
     private static JLabel pointsLabel;
     private static boolean stopped = true;
     private static boolean pausedOnce = false;
+    private static ScrollingImage background = null;
     private static void start(){
         if(!stopped) return;
-        panel.start();
+        background = new ScrollingImage("images/Scroll-Background.png");
         Ground ground = new Ground(panel);
         Dinosaur dino = new Dinosaur(ground);
+        panel.start();
+        panel.addItem(background);
         panel.addItem(dino);
         panel.addItem(ground,true,true);
         stopped = false;
@@ -44,20 +47,20 @@ public class Game
             @Override
             public void perTickCallback(){
                 pointsLabel.setText("Points: "+getTick());
+                background.scroll(-0.6*(Cactus.getSlideSpeed()/Constants.TICK_RATE), 0);
                 if(getTick()!=1) return;
                 if(!pausedOnce) pause();
                 pausedOnce = true;
                 pointsLabel.setText("Press any key to play :D");
             }
         };
-        start();
         JPanel pointsPanel = new JPanel();
         pointsLabel = new JLabel("Points: 0");
         pointsPanel.add(pointsLabel);
         frame.setLayout(new BorderLayout());
-        //frame.add(panel);
         frame.add(pointsPanel, BorderLayout.NORTH);
         frame.add(panel, BorderLayout.CENTER);
         frame.setVisible(true);
+        start();
     }
 }
