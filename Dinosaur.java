@@ -29,7 +29,6 @@ public class Dinosaur implements CompositeGameObject
     private GameObject upperBody;
     private GameObject lowerBody;
     private GameObject rod; //invisible shape used for aligning to ground
-    private GameObject ground;
     private boolean jumping;
     private boolean gameEnds=false;
     private int gameTick;
@@ -78,11 +77,10 @@ public class Dinosaur implements CompositeGameObject
         return true;
     }
     
-    public Dinosaur(Ground instance)
+    public Dinosaur()
     {
         jumpSpeed = 0;
         GRAVITY=Constants.GRAVITY;
-        ground = instance;
         rod = new GameObject(new Rectangle2D.Double(rodX,rodY,5,20),new Color(0,0,0,0),true){
             @Override
             public void onGameTick(int tick, ArrayList<GameObject> collisions){
@@ -98,7 +96,7 @@ public class Dinosaur implements CompositeGameObject
                 boolean justStartedJumping = origJumpSpeed()==speedY;
                 if(!justStartedJumping){
                     for(GameObject gameObject: collisions){
-                        if(gameObject == ground){
+                        if(gameObject instanceof Ground){
                             land();
                             break;
                         }
@@ -194,7 +192,7 @@ public class Dinosaur implements CompositeGameObject
         for(GameObject item: collisions){
             if(
                 item==rod || item==leftLeg || item==rightLeg || item==upperBody || item==mouth
-                || item==head || item==tail || item==lowerBody || item==ground
+                || item==head || item==tail || item==lowerBody || (item instanceof Ground)
             ) continue;
             gameEnds = true;
             break;

@@ -20,7 +20,7 @@ public class Game
         if(!stopped) return;
         background = new ScrollingImage("images/Scroll-Background.png");
         Ground ground = new Ground(panel);
-        Dinosaur dino = new Dinosaur(ground);
+        Dinosaur dino = new Dinosaur();
         panel.start();
         panel.addItem(background);
         panel.addItem(dino);
